@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calculadora de Precio para Cuencos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #f2f6fc 0%, #dbe9f7 100%);
+      margin: 0;
+      padding: 2rem 1rem;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      color: #333;
+    }
+    .container {
+      background: #ffffffcc;
+      max-width: 450px;
+      width: 100%;
+      border-radius: 12px;
+      padding: 2rem 2.5rem 3rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+    h1 {
+      text-align: center;
+      font-weight: 600;
+      color: #2a4963;
+      margin-bottom: 0.3rem;
+      letter-spacing: 1px;
+    }
+    .subtitulo {
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: #5f7a94;
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    label {
+      display: block;
+      margin-top: 1.2rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #4a5a6a;
+    }
+    input[type="number"],
+    select {
+      width: 100%;
+      margin-top: 0.4rem;
+      padding: 0.55rem 0.7rem;
+      font-size: 1rem;
+      border: 1.8px solid #a9bddc;
+      border-radius: 8px;
+      transition: border-color 0.3s ease;
+      font-weight: 500;
+      color: #2c3e50;
+    }
+    input[type="number"]:focus,
+    select:focus {
+      outline: none;
+      border-color: #3f7fbf;
+      box-shadow: 0 0 8px #3f7fbf88;
+    }
+    .nota {
+      font-size: 0.8rem;
+      color: #7b8a9a;
+      margin-top: 0.2rem;
+      font-weight: 400;
+      font-style: italic;
+    }
+    button {
+      margin-top: 2.5rem;
+      width: 100%;
+      padding: 0.9rem 0;
+      background-color: #3f7fbf;
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 6px 12px #3f7fbfaa;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    button:hover {
+      background-color: #2a5a8d;
+      box-shadow: 0 8px 18px #2a5a8daa;
+    }
+    .resultado {
+      margin-top: 2.8rem;
+      background-color: #e0f0fc;
+      border: 2px solid #3f7fbf;
+      color: #244870;
+      font-weight: 700;
+      font-size: 1.3rem;
+      padding: 1rem;
+      text-align: center;
+      border-radius: 10px;
+      min-height: 3rem;
+      user-select: none;
+      letter-spacing: 0.7px;
+    }
+    .imagen-container {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .imagen-container img {
+      max-width: 150px;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px #aaccee88;
+      user-select: none;
+    }
+    @media (max-width: 480px) {
+      .container {
+        padding: 1.5rem 1.8rem 2.5rem;
+      }
+      h1 {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="imagen-container">
+      <img src="jesus-torneando.png" alt="Jesús torneando" />
+    </div>
+
+    <h1>Calculadora de Precio para Cuencos</h1>
+    <div class="subtitulo">Según el método del gran maestro Matías Castro</div>
+
+    <label for="unidad">Unidad de medida:</label>
+    <select id="unidad" name="unidad">
+      <option value="pulg">Pulgadas</option>
+      <option value="cm">Centímetros</option>
+    </select>
+
+    <label for="alto">Alto de la pieza:</label>
+    <input type="number" id="alto" name="alto" step="any" min="0" placeholder="Ej: 10" />
+    <div class="nota">Altura visible del cuenco terminado</div>
+
+    <label for="ancho">Ancho (diámetro):</label>
+    <input type="number" id="ancho" name="ancho" step="any" min="0" placeholder="Ej: 15" />
+    <div class="nota">Diámetro máximo de la pieza</div>
+
+    <label for="espesor">Espesor del bloque:</label>
+    <input type="number" id="espesor" name="espesor" step="any" min="0" placeholder="Ej: 20" />
+    <div class="nota">Medida del bloque bruto antes de tornear</div>
+
+    <label for="precio">Precio por pie cúbico ($):</label>
+    <input type="number" id="precio" name="precio" step="any" min="0" placeholder="Ej: 2500" />
+
+    <label for="trabajo">Nivel de trabajo:</label>
+    <select id="trabajo" name="trabajo">
+      <option value="3">x3 - básico</option>
+      <option value="4">x4 - medio</option>
+      <option value="5">x5 - artístico</option>
+      <option value="6">x6 - diseño único</option>
+    </select>
+
+    <button onclick="calcularPrecio()">Calcular precio</button>
+
+    <div class="resultado" id="resultado"></div>
+  </div>
+
+  <script>
+    function calcularPrecio() {
+      const unidad = document.getElementById('unidad').value;
+      let alto = parseFloat(document.getElementById('alto').value);
+      let ancho = parseFloat(document.getElementById('ancho').value);
+      let espesor = parseFloat(document.getElementById('espesor').value);
+      const precioPieCubico = parseFloat(document.getElementById('precio').value);
+      const trabajo = parseFloat(document.getElementById('trabajo').value);
+
+      if ([alto, ancho, espesor, precioPieCubico].some(isNaN)) {
+        document.getElementById('resultado').textContent = "Por favor completa todos los campos numéricos.";
+        return;
+      }
+
+      if (unidad === "cm") {
+        alto *= 0.3937;
+        ancho *= 0.3937;
+        espesor *= 0.3937;
+      }
+
+      const volumen = (alto * ancho * 0.2734) / espesor;
+      const costoMaterial = volumen * precioPieCubico;
+      const precioFinal = Math.round(costoMaterial * trabajo);
+
+      const precioFormateado = precioFinal.toLocaleString("es-AR");
+      document.getElementById('resultado').textContent = `Precio sugerido: $${precioFormateado}`;
+    }
+  </script>
+</body>
+</html>
